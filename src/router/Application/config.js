@@ -82,6 +82,13 @@ export const PORTAL_ROUTE_CONFIG = addSubPathOfRoutes(
       component: () => import('src/pages/worksheet/WorkSheet'),
       sensitive: true,
     },
+
+    // custom
+    custom: {
+      path: '/(app/)?:appId/myCustom',
+      component: () => import('pages/myCustom/index'),
+      sensitive: true,
+    },
   },
   window.subPath,
 );

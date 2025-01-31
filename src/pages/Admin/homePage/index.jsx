@@ -28,13 +28,16 @@ export default function HomePage({ match, location: routerLocation }) {
   const isFree = data.licenseType === 0;
   const isEnLang = md.global.Account.lang === 'en';
 
+  // 首次挂载，仅加载一次：获取基本信息
   useEffect(() => {
+    // i18n 翻译。 %0 为 companyName 的占位符。
     document.title = _l('组织管理 - 首页 - %0', companyName);
     getBaseData();
     getUsageData();
     getVersionInfo();
   }, []);
 
+  // 类似于 watch + immediate: true
   useEffect(() => {
     if (!freeTrialVisible || data.rules) return;
     projectAjax.getInviteGiveRule({ projectId }).then(res => {
@@ -55,6 +58,8 @@ export default function HomePage({ match, location: routerLocation }) {
       if (!res.currentLicense.version) {
         res.currentLicense.version = { name: _l('免费版') };
       }
+
+      // 使用 _.omit() 来排除数组中的这些属性
       const resData = _.omit(res, [
         'effectiveApkCount',
         'effectiveApkStorageCount',
@@ -197,6 +202,8 @@ export default function HomePage({ match, location: routerLocation }) {
   const isTeam = data.licenseType === 1 && versionIdV2 === 1;
   const getValue = value => (_.isUndefined(value) || _.isNaN(value) ? '-' : value);
 
+
+  // 工作流执行次数卡片
   const getCountText = (key, limit, numUnit) => {
     const isAttachmentUpload = key === 'effectiveApkStorageCount'; // 附件上传量
     let percent = isAttachmentUpload
@@ -286,8 +293,8 @@ export default function HomePage({ match, location: routerLocation }) {
                     <div className="name">{text}</div>
                     <div className="count">{formatValue(getValue(data[key] || 0))}</div>
                     {key === 'effectiveUserCount' && (
-                      <Fragment onClick={e => e.stopPropagation()}>
-                        <div className="limitUser">
+                      <Fragment >
+                        <div className="limitUser" onClick={e => e.stopPropagation()}>
                           <span className="nowrap">{_l('上限 %0 人', getValue(data.limitUserCount || 0))}</span>
                         </div>
                       </Fragment>

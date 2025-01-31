@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import cx from 'classnames';
 import { TinyColor } from '@ctrl/tinycolor';
 import localForage from 'localforage';
+import { navigateTo } from 'src/router/navigateTo';
 
 const RoleDebugSelectWrap = styled.div(
   ({ navColor, borderColor }) => `
@@ -108,8 +109,8 @@ export default ({
             {roleSelectValue.length === 0
               ? _l('选择角色')
               : roleSelectValue.length === 1
-              ? roleSelectValue[0].name
-              : _l('%0个角色', roleSelectValue.length)}
+                ? roleSelectValue[0].name
+                : _l('%0个角色', roleSelectValue.length)}
           </span>
           <Tooltip disable={!roleSelectValue.length} placement="bottom" text={_l('清空调试')}>
             <Icon
@@ -141,11 +142,22 @@ export default ({
   return (
     <div className="appExtensionWrap">
       {otherAllShow && !window.isPublicApp && canEditApp(permissionType, isLock) && (
-        <MdLink to={`/app/${appId}/workflow`}>
-          <div className="flexRow appExtensionItem" data-tip={_l('工作流')}>
+        <div>
+          <MdLink to={`/app/${appId}/workflow`}>
+            <div className="flexRow appExtensionItem" data-tip={_l('工作流')}>
+              <Icon className="Font20" icon="workflow" />
+            </div>
+          </MdLink>
+
+
+          <div className="flexRow appExtensionItem" data-tip={_l('自定义页面')} onClick={() => { navigateTo(`/app/${appId}/myCustom`) }} >
             <Icon className="Font20" icon="workflow" />
           </div>
-        </MdLink>
+
+        </div>
+
+
+
       )}
       {(roleEntryVisible || canDebug) && renderRoleDebugSelect()}
     </div>
